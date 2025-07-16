@@ -1,0 +1,109 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+  "name": "Ubuntu",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "mcr.microsoft.com/devcontainers/base:noble",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "portsAttributes": {
+    "3000-3010": {
+      "label": "Origin",
+      "onAutoForward": "openPreview"
+    },
+    "7676": {
+      "label": "Compute",
+      "onAutoForward": "openPreview"
+    }
+  },
+  "updateContentCommand": {
+    "cinstall": "npm install",
+    "vinstall": "cd origin && npm install"
+  },
+  "postAttachCommand": {
+    "inform": "bash helpers/welcome.sh",
+    "build": "npm run start",
+    "origin": "cd origin && npm run serve"
+  },
+  "waitFor": "updateContentCommand",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "jkearins.action-buttons-ext@0.1.1",
+        "dbaeumer.vscode-eslint",
+        "ritwickdey.LiveServer"
+      ],
+      "settings": {
+        "files.exclude": {
+          "package-lock.json": true,
+          ".gitignore": true,
+          "node_modules/": true
+        },
+        "editor.minimap.enabled": false,
+        "chat.sendElementsToChat.enabled": false,
+        "liveServer.settings.NoBrowser": true,
+      	"liveServer.settings.donotShowInfoMsg": true,
+        "actionButtons": {
+          "commands": [
+            {
+              "name": "🌈 Prettify",
+              "singleInstance": true,
+              "useVsCodeApi": true,
+              "command": "editor.action.formatDocument",
+              "tooltip": "Tidy up your code"
+            },
+            {
+              "name": "💻 Terminal",
+              "singleInstance": true,
+              "useVsCodeApi": true,
+              "command": "workbench.action.terminal.toggleTerminal",
+              "tooltip": "Open a terminal"
+            },
+            {
+              "name": "🔎 Split",
+              "singleInstance": true,
+              "useVsCodeApi": true,
+              "command": "workbench.action.moveEditorToNextGroup",
+              "tooltip": "Move your active tab to the side"
+            },
+	    {
+              "name": "🏠 Origin",
+              "singleInstance": true,
+              "useVsCodeApi": true,
+              "command": "workbench.action.tasks.runTask",
+              "args": [
+                "open"
+              ],
+              "tooltip": "View your origin site"
+            },
+            {
+              "name": "🔗 Share",
+              "singleInstance": true,
+              "command": "bash helpers/share.sh",
+              "tooltip": "Grab a link to share your draft site"
+            },
+            {
+              "name": "🚀 Publish",
+              "singleInstance": true,
+              "command": "bash helpers/publish.sh",
+              "tooltip": "Publish your content to Fastly Compute"
+            }
+          ],
+          "defaultColor": "none",
+          "reloadButton": null
+        },
+	"tasks": {
+          "version": "2.0.0",
+          "tasks": [
+            {
+              "label": "open",
+              "command": "${command:extension.liveServer.goOnline}"
+            }
+          ]
+        },
+      }
+    }
+  }
+}
